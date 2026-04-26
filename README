@@ -1,0 +1,72 @@
+# 🎬 MyMovies App
+
+Projeto simples de catálogo de filmes onde o usuário pode buscar, salvar e organizar sua lista usando uma API externa.
+
+---
+
+## 🚀 Sobre o Projeto
+
+O **MyMovies App** permite buscar filmes pelo nome e ano, exibindo os resultados em um layout de cards.  
+Os filmes podem ser adicionados e salvos no navegador usando **localStorage**.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+### 💻 Front-end
+
+![HTML](https://www.readmecodegen.com/api/social-icon?name=html5&size=24) HTML5  
+![CSS3](https://www.readmecodegen.com/api/social-icon?name=css3&size=24) CSS3  
+![JavaScript](https://www.readmecodegen.com/api/social-icon?name=javascript&size=24) JavaScript  
+
+---
+
+### 🎨 Estilização
+
+- Flexbox  
+- CSS Grid  
+- Variáveis CSS (:root)  
+- Hover effects  
+- Layout responsivo  
+
+---
+
+### 🔗 API
+
+- OMDb API (Open Movie Database)  
+https://www.omdbapi.com/
+
+---
+
+### 💾 Armazenamento
+
+- LocalStorage (persistência de dados no navegador)
+
+---
+
+### ⚙️ Ferramentas
+
+- VS Code  
+- Git  
+- GitHub  
+- Live Server  
+
+---
+
+## 📦 Funcionalidades
+
+- 🔎 Buscar filmes por nome  
+- 📅 Filtrar por ano  
+- 🎞️ Exibir filmes em grid  
+- 💾 Salvar filmes na lista  
+- ❌ Remover filmes individuais  
+- 🧹 Limpar lista completa  
+
+---
+
+## 💻 Como Rodar o Projeto Localmente:
+
+1. Clone o repositório:
+
+```bash
+git clone https://github.com/SEU-USUARIO/mymovies-app.git

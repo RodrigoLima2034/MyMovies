@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyMovies</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="modal.css">
+    <link rel="stylesheet" href="./notie-master/dist/notie.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <!-- ✅ FAVICON -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <h2><i class="bi bi-film"></i> MyMovies</h2>
+
+        <div id="search-container">
+
+            <div class="input-nome-wrapper">
+                <label for="movie-name">Nome:</label>
+                <input type="text" id="movie-name" placeholder="Digite o nome do filme">
+            </div>
+
+            <div class="input-year-wrapper">
+                <label for="movie-year">Ano:</label>
+                <input type="number" id="movie-year" placeholder="Ano" min="1888" max="2100">
+            </div>
+
+            <button id="search-button">
+                <i class="bi bi-search"></i>
+            </button>
+
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main>
+        <div id="api-container">
+            <input type="text" id="api-key" placeholder="Digite sua API Key OMDb">
+            <button id="save-key">Salvar Key</button>
+        </div>
+        
+        <h2>Comece agora a sua Lista de Filmes</h2>
+
+        <section id="movie-list"></section>
+
+        <!-- MODAL -->
+        <article id="modal-overlay" class="overlay">
+            <section id="modal-background"></section>
+            <section id="modal-container"></section>
+        </article>
+
+        <!-- BOTÃO LIMPAR -->
+        <button id="clear-button">Limpar Tudo</button>
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2026 MyMovies</p>
+        <p>Desenvolvido por Rodrigo p. Lima</p>
+
+        <div class="footer-links">
+            <a href="https://github.com/RodrigoLima2034?tab=repositories">
+                <i class="bi bi-github"></i> GitHub
+            </a>
+            <a href="https://www.linkedin.com/in/rodrigo-pereira-lima-268305170/">
+                <i class="bi bi-linkedin"></i> LinkedIn
+            </a>
+        </div>
+
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="modal.js"></script>
+    <script src="script.js"></script>
+    <script src="./notie-master/dist/notie.min.js"></script>
+
+</body>
+
+</html>
