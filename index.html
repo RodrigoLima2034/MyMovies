@@ -21,23 +21,22 @@
     <header>
         <h2><i class="bi bi-film"></i> MyMovies</h2>
 
-        <div id="search-container">
-
+        <form id="search-container" autocomplete="off" onsubmit="return false;">
             <div class="input-nome-wrapper">
                 <label for="movie-name">Nome:</label>
-                <input type="text" id="movie-name" placeholder="Digite o nome do filme">
+                <div class="input-icon-wrapper">
+                    <input type="text" id="movie-name" placeholder="Digite o nome do filme">
+                    <i class="bi bi-search search-icon"></i>
+                </div>
             </div>
-
             <div class="input-year-wrapper">
                 <label for="movie-year">Ano:</label>
                 <input type="number" id="movie-year" placeholder="Ano" min="1888" max="2100">
             </div>
-
-            <button id="search-button">
-                <i class="bi bi-search"></i>
+            <button id="search-button" type="button" title="Buscar Filme">
+                <i class="bi bi-search"></i> Buscar
             </button>
-
-        </div>
+        </form>
     </header>
 
     <!-- MAIN -->
@@ -47,9 +46,19 @@
             <button id="save-key">Salvar Key</button>
         </div>
         
-        <h2>Comece agora a sua Lista de Filmes</h2>
+
+        <div id="welcome-message" style="margin: 40px 0; color: #888; font-size: 1.2em;">
+            <i class="bi bi-emoji-smile" style="font-size:2em;"></i><br>
+            Bem-vindo ao <b>MyMovies</b>!<br>
+            Salve sua API Key OMDb, busque filmes e monte sua lista.<br>
+            <span style="font-size:0.9em;">Dica: Clique no card para ver o trailer!</span>
+        </div>
 
         <section id="movie-list"></section>
+        <div id="empty-list-placeholder" style="display:none; margin: 40px 0; color: #aaa; font-size: 1.1em;">
+            <i class="bi bi-film" style="font-size:2em;"></i><br>
+            Sua lista está vazia. Busque e adicione filmes!
+        </div>
 
         <!-- MODAL -->
         <article id="modal-overlay" class="overlay">

@@ -42,6 +42,31 @@ header {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    align-items: flex-end;
+    background: #f5f7fa;
+    border-radius: 10px;
+    padding: 10px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    margin-bottom: 10px;
+}
+
+.input-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #bbb;
+    pointer-events: none;
+}
+
+#movie-name {
+    padding-right: 32px;
 }
 
 /* INPUTS */
@@ -68,22 +93,22 @@ button:hover {
     background-color: var(--primary-color);
 }
 
-/* MAIN */
 main {
     flex: 1;
     padding: 20px;
     text-align: center;
     background-color: #ffffff;
+    min-height: 60vh;
 }
 
 /* MOVIE LIST RESPONSIVO */
 #movie-list {
     display: flex;
     flex-wrap: wrap;
-    
     gap: 20px;
     justify-content: center;
     margin-top: 20px;
+    min-height: 120px;
 }
 
 #movie-list article {
@@ -128,6 +153,18 @@ main {
     }
     #modal-body img {
         width: 120px;
+    }
+    #search-container {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px 5px;
+    }
+    .input-nome-wrapper, .input-year-wrapper {
+        width: 100%;
+    }
+    #search-button {
+        width: 100%;
+        margin-top: 8px;
     }
 }
 
