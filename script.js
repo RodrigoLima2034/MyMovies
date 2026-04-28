@@ -1,4 +1,3 @@
-
 const searchButton = document.getElementById('search-button');
 const movieName = document.getElementById('movie-name');
 const movieYear = document.getElementById('movie-year');
@@ -132,12 +131,9 @@ function updateUI(movieObject) {
 async function showTrailerModal(title, year) {
     try {
         const query = encodeURIComponent(`${title} ${year || ''} trailer`);
-        // Usando busca embutida do YouTube
         const url = `https://www.youtube.com/results?search_query=${query}`;
-        // Busca rápida do vídeo (usando o embed do primeiro resultado)
-        // Como não temos API do YouTube, vamos abrir o embed com base na busca
-        // O embed padrão do YouTube é https://www.youtube.com/embed/{videoId}
-        // Vamos tentar buscar o videoId via fetch na página de resultados
+
+        // Buscar o primeiro resultado do YouTube usando noembed
         const response = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/results?search_query=${query}`);
         let videoId = null;
         if (response.ok) {
@@ -147,14 +143,8 @@ async function showTrailerModal(title, year) {
                 if (match) videoId = match[1];
             }
         }
-        // Fallback: abrir busca do YouTube
-        let embedHtml = '';
-        if (videoId) {
-            embedHtml = `<iframe width="100%" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-        } else {
-            embedHtml = `<a href="${url}" target="_blank">Ver trailers no YouTube</a>`;
-        }
-        // Cria modal simples para trailer
+
+        // Criar o modal
         let trailerModal = document.getElementById('trailer-modal');
         if (!trailerModal) {
             trailerModal = document.createElement('div');
@@ -172,13 +162,26 @@ async function showTrailerModal(title, year) {
             trailerModal.innerHTML = `<div id="trailer-content" style="background:#fff; padding:20px; border-radius:10px; max-width:90vw; max-height:80vh; overflow:auto; position:relative;"></div>`;
             document.body.appendChild(trailerModal);
         }
+
         const content = trailerModal.querySelector('#trailer-content');
-        content.innerHTML = `<button id="close-trailer-modal" style="position:absolute;top:10px;right:10px;font-size:20px;">&times;</button><h3>Trailer de ${title}</h3>${embedHtml}`;
+        if (videoId) {
+            content.innerHTML = `
+                <button id="close-trailer-modal" style="position:absolute;top:10px;right:10px;font-size:20px;">&times;</button>
+                <iframe width="100%" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+            `;
+        } else {
+            content.innerHTML = `
+                <button id="close-trailer-modal" style="position:absolute;top:10px;right:10px;font-size:20px;">&times;</button>
+                <p style="text-align:center;">Trailer não encontrado. <a href="${url}" target="_blank" style="color:blue;">Buscar no YouTube</a></p>
+            `;
+        }
+
         trailerModal.style.display = 'flex';
         document.getElementById('close-trailer-modal').onclick = () => {
             trailerModal.style.display = 'none';
             content.innerHTML = '';
         };
+
         // Fechar com ESC
         document.onkeydown = function(e) {
             if (e.key === 'Escape') {
