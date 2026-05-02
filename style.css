@@ -15,6 +15,7 @@
 }
 
 html, body {
+    min-height: 100%;
     height: 100%;
 }
 
@@ -24,6 +25,7 @@ body {
     background-color: var(--lightest-color);
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 
 /* HEADER */
@@ -95,7 +97,7 @@ button:hover {
 }
 
 main {
-    flex: 1;
+    flex: 1 0 auto;
     padding: 20px;
     text-align: center;
     background-color: #ffffff;
