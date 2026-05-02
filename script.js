@@ -108,7 +108,13 @@ function updateUI(movieObject) {
 
     movieListContainer.insertAdjacentHTML('beforeend', `
         <article id="movie-card-${movieObject.imdbID}" class="movie-card">
-            <img src="${poster}" alt="${movieObject.Title}">
+            <div class="card-media">
+                <img src="${poster}" alt="${movieObject.Title}">
+                <div class="card-overlay">
+                    <span>▶ Assistir trailer</span>
+                </div>
+                <div class="video-player"></div>
+            </div>
             <p>${movieObject.Title}</p>
             <button onclick="removeFilmeFromList('${movieObject.imdbID}')" class="remove-btn">
                 REMOVER
@@ -116,13 +122,47 @@ function updateUI(movieObject) {
         </article>
     `);
 
-    // Adiciona evento de clique no card para trailer
     const card = document.getElementById(`movie-card-${movieObject.imdbID}`);
     if (card) {
         card.addEventListener('click', function(e) {
-            // Evita conflito com botão remover
             if (e.target.tagName === 'BUTTON') return;
-            showTrailerModal(movieObject.Title, movieObject.Year);
+            toggleCardVideo(movieObject, card);
+        });
+    }
+}
+
+function toggleCardVideo(movieObject, card) {
+    const query = encodeURIComponent(`${movieObject.Title} ${movieObject.Year || ''} trailer`);
+    const player = card.querySelector('.video-player');
+    const overlay = card.querySelector('.card-overlay');
+
+    if (!player || !overlay) return;
+
+    if (player.innerHTML.trim()) {
+        player.innerHTML = '';
+        player.style.display = 'none';
+        overlay.style.display = 'flex';
+        return;
+    }
+
+    overlay.style.display = 'none';
+    player.style.display = 'block';
+    player.innerHTML = `
+        <div class="video-frame">
+            <button class="close-video" type="button" aria-label="Fechar trailer">&times;</button>
+            <iframe src="https://www.youtube.com/embed?listType=search&list=${query}&autoplay=1"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+    `;
+
+    const closeButton = player.querySelector('.close-video');
+    if (closeButton) {
+        closeButton.addEventListener('click', function(event) {
+            event.stopPropagation();
+            player.innerHTML = '';
+            player.style.display = 'none';
+            overlay.style.display = 'flex';
         });
     }
 }

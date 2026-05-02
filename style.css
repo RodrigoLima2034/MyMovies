@@ -128,6 +128,68 @@ main {
     transform: scale(1.04);
 }
 
+.movie-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-media {
+    position: relative;
+    width: 100%;
+}
+
+.card-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: rgba(0,0,0,0.45);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+}
+
+.movie-card:hover .card-overlay {
+    opacity: 1;
+}
+
+.video-player {
+    display: none;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin-top: 10px;
+}
+
+.video-frame {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.video-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 10px;
+}
+
+.close-video {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    background: rgba(0,0,0,0.55);
+    color: #fff;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
 #movie-list img {
     width: 100%;
     height: 250px;
