@@ -107,91 +107,29 @@ function updateUI(movieObject) {
         : "https://via.placeholder.com/180x250?text=Sem+Imagem";
 
     movieListContainer.insertAdjacentHTML('beforeend', `
-        <article id="movie-card-${movieObject.imdbID}" class="movie-card" style="cursor:pointer;">
+        <article id="movie-card-${movieObject.imdbID}" class="movie-card">
             <img src="${poster}" alt="${movieObject.Title}">
             <p>${movieObject.Title}</p>
-            <button onclick="removeFilmeFromList('${movieObject.imdbID}')">
-                REMOVER
-            </button>
+            <div class="card-buttons">
+                <button onclick="showTrailerModal('${movieObject.Title}', '${movieObject.Year}')" class="trailer-btn">
+                    <i class="bi bi-play-circle"></i> Trailer
+                </button>
+                <button onclick="removeFilmeFromList('${movieObject.imdbID}')" class="remove-btn">
+                    REMOVER
+                </button>
+            </div>
         </article>
     `);
 
     // Adiciona evento de clique para trailer
-    const card = document.getElementById(`movie-card-${movieObject.imdbID}`);
-    if (card) {
-        card.addEventListener('click', function(e) {
-            // Evita conflito com botão remover
-            if (e.target.tagName === 'BUTTON') return;
-            showTrailerModal(movieObject.Title, movieObject.Year);
-        });
-    }
+    // Removido: agora há botão específico
 }
 
-// Função para buscar trailer e exibir modal
-async function showTrailerModal(title, year) {
-    try {
-        const query = encodeURIComponent(`${title} ${year || ''} trailer`);
-        const url = `https://www.youtube.com/results?search_query=${query}`;
-
-        // Buscar o primeiro resultado do YouTube usando noembed
-        const response = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/results?search_query=${query}`);
-        let videoId = null;
-        if (response.ok) {
-            const data = await response.json();
-            if (data.url && data.url.includes('youtube.com/watch')) {
-                const match = data.url.match(/v=([\w-]+)/);
-                if (match) videoId = match[1];
-            }
-        }
-
-        // Criar o modal
-        let trailerModal = document.getElementById('trailer-modal');
-        if (!trailerModal) {
-            trailerModal = document.createElement('div');
-            trailerModal.id = 'trailer-modal';
-            trailerModal.style.position = 'fixed';
-            trailerModal.style.top = '0';
-            trailerModal.style.left = '0';
-            trailerModal.style.width = '100vw';
-            trailerModal.style.height = '100vh';
-            trailerModal.style.background = 'rgba(0,0,0,0.8)';
-            trailerModal.style.display = 'flex';
-            trailerModal.style.alignItems = 'center';
-            trailerModal.style.justifyContent = 'center';
-            trailerModal.style.zIndex = '10000';
-            trailerModal.innerHTML = `<div id="trailer-content" style="background:#fff; padding:20px; border-radius:10px; max-width:90vw; max-height:80vh; overflow:auto; position:relative;"></div>`;
-            document.body.appendChild(trailerModal);
-        }
-
-        const content = trailerModal.querySelector('#trailer-content');
-        if (videoId) {
-            content.innerHTML = `
-                <button id="close-trailer-modal" style="position:absolute;top:10px;right:10px;font-size:20px;">&times;</button>
-                <iframe width="100%" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
-            `;
-        } else {
-            content.innerHTML = `
-                <button id="close-trailer-modal" style="position:absolute;top:10px;right:10px;font-size:20px;">&times;</button>
-                <p style="text-align:center;">Trailer não encontrado. <a href="${url}" target="_blank" style="color:blue;">Buscar no YouTube</a></p>
-            `;
-        }
-
-        trailerModal.style.display = 'flex';
-        document.getElementById('close-trailer-modal').onclick = () => {
-            trailerModal.style.display = 'none';
-            content.innerHTML = '';
-        };
-
-        // Fechar com ESC
-        document.onkeydown = function(e) {
-            if (e.key === 'Escape') {
-                trailerModal.style.display = 'none';
-                content.innerHTML = '';
-            }
-        };
-    } catch (err) {
-        alert('Não foi possível carregar o trailer.');
-    }
+// Função para buscar trailer
+function showTrailerModal(title, year) {
+    const query = encodeURIComponent(`${title} ${year || ''} trailer`);
+    const url = `https://www.youtube.com/results?search_query=${query}`;
+    window.open(url, '_blank');
 }
 /* REMOVE */
 function removeFilmeFromList(id) {
