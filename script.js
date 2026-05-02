@@ -131,45 +131,7 @@ function updateUI(movieObject) {
 function showTrailerModal(title, year) {
     const query = encodeURIComponent(`${title} ${year || ''} trailer`);
     const url = `https://www.youtube.com/results?search_query=${query}`;
-
-    // Criar o modal
-    let trailerModal = document.getElementById('trailer-modal');
-    if (!trailerModal) {
-        trailerModal = document.createElement('div');
-        trailerModal.id = 'trailer-modal';
-        trailerModal.style.position = 'fixed';
-        trailerModal.style.top = '0';
-        trailerModal.style.left = '0';
-        trailerModal.style.width = '100vw';
-        trailerModal.style.height = '100vh';
-        trailerModal.style.background = 'rgba(0,0,0,0.9)';
-        trailerModal.style.display = 'flex';
-        trailerModal.style.alignItems = 'center';
-        trailerModal.style.justifyContent = 'center';
-        trailerModal.style.zIndex = '10000';
-        trailerModal.innerHTML = `<div id="trailer-content" style="background:#000; padding:0; border-radius:10px; max-width:90vw; max-height:80vh; position:relative;"></div>`;
-        document.body.appendChild(trailerModal);
-    }
-
-    const content = trailerModal.querySelector('#trailer-content');
-    content.innerHTML = `
-        <button id="close-trailer-modal" style="position:absolute;top:10px;right:10px;font-size:20px;color:white;background:none;border:none;z-index:10001;">&times;</button>
-        <iframe width="100%" height="100%" src="${url}" frameborder="0" allowfullscreen style="border-radius:10px;"></iframe>
-    `;
-
-    trailerModal.style.display = 'flex';
-    document.getElementById('close-trailer-modal').onclick = () => {
-        trailerModal.style.display = 'none';
-        content.innerHTML = '';
-    };
-
-    // Fechar com ESC
-    document.onkeydown = function(e) {
-        if (e.key === 'Escape') {
-            trailerModal.style.display = 'none';
-            content.innerHTML = '';
-        }
-    };
+    window.open(url, '_blank');
 }
 /* REMOVE */
 function removeFilmeFromList(id) {
