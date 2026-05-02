@@ -132,6 +132,13 @@ main {
 .movie-card {
     position: relative;
     overflow: hidden;
+    transition: transform 0.2s ease, max-height 0.3s ease;
+    max-height: 520px;
+}
+
+.movie-card.expanded {
+    transform: scale(1.02);
+    max-height: 900px;
 }
 
 .card-media {
@@ -157,14 +164,25 @@ main {
     opacity: 1;
 }
 
+.movie-card.expanded .card-overlay {
+    opacity: 0;
+}
+
 .video-player {
-    display: none;
     width: 100%;
     aspect-ratio: 16 / 9;
     margin-top: 10px;
     background: #000;
     border-radius: 10px;
     overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+.movie-card.expanded .video-player {
+    max-height: 420px;
+    opacity: 1;
 }
 
 .video-frame {
@@ -333,6 +351,7 @@ footer {
     color: white;
     text-align: center;
     width: 100%;
+    margin-top: auto;
 }
 
 /* LINKS */

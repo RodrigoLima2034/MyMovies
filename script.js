@@ -141,48 +141,40 @@ function toggleCardVideo(movieObject, card) {
 
     if (player.innerHTML.trim()) {
         player.innerHTML = '';
-        player.style.display = 'none';
+        card.classList.remove('expanded');
         overlay.style.display = 'flex';
         return;
     }
 
     overlay.style.display = 'none';
-    player.style.display = 'block';
-    player.innerHTML = `
-        <div class="video-frame video-loading">
-            <div class="video-loading-text">Carregando trailer...</div>
-        </div>
-    `;
+    card.classList.add('expanded');
+    player.innerHTML = '';
 
-    const endpoint = `https://api.allorigins.win/raw?url=https://www.youtube.com/results?search_query=${encodedQuery}`;
+    const frame = document.createElement('div');
+    frame.className = 'video-frame';
 
-    fetch(endpoint)
-        .then(response => response.text())
-        .then(html => {
-            const match = html.match(/\/watch\?v=([\w-]{11})/);
-            if (!match) {
-                throw new Error('Trailer não encontrado');
-            }
+    const closeButton = document.createElement('button');
+    closeButton.className = 'close-video';
+    closeButton.type = 'button';
+    closeButton.setAttribute('aria-label', 'Fechar trailer');
+    closeButton.textContent = '×';
 
-            const videoId = match[1];
-            player.innerHTML = `
-                <div class="video-frame">
-                    <button class="close-video" type="button" aria-label="Fechar trailer">&times;</button>
-                    <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-            `;
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube-nocookie.com/embed?listType=search&list=${encodedQuery}&autoplay=1`;
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
 
-            const closeButton = player.querySelector('.close-video');
-            if (closeButton) {
-                closeButton.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    player.innerHTML = '';
-                    player.style.display = 'none';
-                    overlay.style.display = 'flex';
-                });
-            }
-        })
-        .catch(() => {
+    frame.appendChild(closeButton);
+    frame.appendChild(iframe);
+    player.appendChild(frame);
+
+    let loaded = false;
+    iframe.onload = function() {
+        loaded = true;
+    };
+
+    const fallbackTimer = setTimeout(function() {
+        if (!loaded) {
             player.innerHTML = `
                 <div class="video-frame video-error">
                     <p>Não foi possível carregar o trailer aqui.</p>
@@ -198,7 +190,16 @@ function toggleCardVideo(movieObject, card) {
                     window.open(url, '_blank');
                 });
             }
-        });
+        }
+    }, 5000);
+
+    closeButton.addEventListener('click', function(event) {
+        event.stopPropagation();
+        clearTimeout(fallbackTimer);
+        card.classList.remove('expanded');
+        player.innerHTML = '';
+        overlay.style.display = 'flex';
+    });
 }
 
 function showTrailerModal(title, year) {
