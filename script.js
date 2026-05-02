@@ -150,56 +150,17 @@ function toggleCardVideo(movieObject, card) {
     card.classList.add('expanded');
     player.innerHTML = '';
 
-    const frame = document.createElement('div');
-    frame.className = 'video-frame';
+    // Abre diretamente no YouTube ao invés de carregar iframe
+    const url = `https://www.youtube.com/results?search_query=${encodedQuery}`;
+    window.open(url, 'youtube_trailer');
+    
 
-    const closeButton = document.createElement('button');
-    closeButton.className = 'close-video';
-    closeButton.type = 'button';
-    closeButton.setAttribute('aria-label', 'Fechar trailer');
-    closeButton.textContent = '×';
-
-    const iframe = document.createElement('iframe');
-    iframe.src = `https://www.youtube-nocookie.com/embed?listType=search&list=${encodedQuery}&autoplay=1`;
-    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-    iframe.allowFullscreen = true;
-
-    frame.appendChild(closeButton);
-    frame.appendChild(iframe);
-    player.appendChild(frame);
-
-    let loaded = false;
-    iframe.onload = function() {
-        loaded = true;
-    };
-
-    const fallbackTimer = setTimeout(function() {
-        if (!loaded) {
-            player.innerHTML = `
-                <div class="video-frame video-error">
-                    <p>Não foi possível carregar o trailer aqui.</p>
-                    <button class="open-search" type="button">Abrir no YouTube</button>
-                </div>
-            `;
-
-            const openButton = player.querySelector('.open-search');
-            if (openButton) {
-                openButton.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    const url = `https://www.youtube.com/results?search_query=${encodedQuery}`;
-                    window.open(url, '_blank');
-                });
-            }
-        }
-    }, 5000);
-
-    closeButton.addEventListener('click', function(event) {
-        event.stopPropagation();
-        clearTimeout(fallbackTimer);
+    // Fecha o player após abrir
+    setTimeout(() => {
         card.classList.remove('expanded');
         player.innerHTML = '';
         overlay.style.display = 'flex';
-    });
+    }, 500);
 }
 
 function showTrailerModal(title, year) {
