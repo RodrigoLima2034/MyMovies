@@ -5,6 +5,7 @@ const movieListContainer = document.getElementById('movie-list');
 const clearButton = document.getElementById('clear-button');
 const saveKeyButton = document.getElementById('save-key');
 const apiKeyInput = document.getElementById('api-key');
+const emptyListPlaceholder = document.getElementById('empty-list-placeholder');
 
 // Spinner
 const spinner = document.createElement('div');
@@ -22,7 +23,11 @@ const style = document.createElement('style');
 style.innerHTML = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
 document.head.appendChild(style);
 
-let key = ""; // 🔥 agora cada usuário define a própria key
+let key = localStorage.getItem('omdbApiKey') || ''; // 🔥 cada usuário define e persiste a própria key
+
+if (key) {
+    apiKeyInput.value = key;
+}
 
 let movieList;
 
@@ -40,6 +45,7 @@ saveKeyButton.addEventListener('click', () => {
     }
 
     key = apiKeyInput.value.trim();
+    localStorage.setItem('omdbApiKey', key);
     notie.alert({ type: 'success', text: 'API Key salva!' });
 });
 
@@ -98,6 +104,7 @@ function addToList(movieObject) {
     movieList.push(movieObject);
     updateUI(movieObject);
     updateLocalStorage();
+    updatePlaceholder();
 }
 
 /* UI */
@@ -134,40 +141,10 @@ function updateUI(movieObject) {
 function toggleCardVideo(movieObject, card) {
     const query = `${movieObject.Title} ${movieObject.Year || ''} trailer`.trim();
     const encodedQuery = encodeURIComponent(query);
-    const player = card.querySelector('.video-player');
-    const overlay = card.querySelector('.card-overlay');
-
-    if (!player || !overlay) return;
-
-    if (player.innerHTML.trim()) {
-        player.innerHTML = '';
-        card.classList.remove('expanded');
-        overlay.style.display = 'flex';
-        return;
-    }
-
-    overlay.style.display = 'none';
-    card.classList.add('expanded');
-    player.innerHTML = '';
-
-    // Abre diretamente no YouTube ao invés de carregar iframe
     const url = `https://www.youtube.com/results?search_query=${encodedQuery}`;
-    window.open(url, 'youtube_trailer');
-    
-
-    // Fecha o player após abrir
-    setTimeout(() => {
-        card.classList.remove('expanded');
-        player.innerHTML = '';
-        overlay.style.display = 'flex';
-    }, 500);
+    window.open(url, '_blank', 'noopener,noreferrer');
 }
 
-function showTrailerModal(title, year) {
-    const query = encodeURIComponent(`${title} ${year || ''} trailer`);
-    const url = `https://www.youtube.com/results?search_query=${query}`;
-    window.open(url, '_blank');
-}
 /* REMOVE */
 function removeFilmeFromList(id) {
 
@@ -183,6 +160,7 @@ function removeFilmeFromList(id) {
             if (el) el.remove();
 
             updateLocalStorage();
+            updatePlaceholder();
 
             notie.alert({ type: 'success', text: 'Removido!' });
         }
@@ -196,6 +174,12 @@ function updateLocalStorage() {
 
 /* LOAD */
 movieList.forEach(updateUI);
+updatePlaceholder();
+
+function updatePlaceholder() {
+    if (!emptyListPlaceholder) return;
+    emptyListPlaceholder.style.display = movieList.length === 0 ? 'block' : 'none';
+}
 
 /* CLEAR */
 function clearList() {
@@ -214,6 +198,7 @@ function clearList() {
             movieList = [];
             movieListContainer.innerHTML = '';
             updateLocalStorage();
+            updatePlaceholder();
 
             notie.alert({ type: 'success', text: 'Lista limpa!' });
         }

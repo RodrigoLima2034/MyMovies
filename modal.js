@@ -28,12 +28,13 @@ function isMovieAlreadyOnList(id) {
 
 function createModal(data) {
     currentMovie = data;
+    const posterUrl = data.Poster !== 'N/A' ? data.Poster : 'https://via.placeholder.com/300x450?text=Sem+Poster';
 
     modalContainer.innerHTML = `
         <h2>${data.Title} - ${data.Year}</h2>
 
         <section id="modal-body">
-            <img src="${data.Poster}" alt="Poster do filme">
+            <img src="${posterUrl}" alt="Poster do filme">
 
             <div id="movie-info">
                 <p><strong>Sinopse:</strong> ${data.Plot}</p>
