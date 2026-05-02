@@ -132,7 +132,8 @@ function updateUI(movieObject) {
 }
 
 function toggleCardVideo(movieObject, card) {
-    const query = encodeURIComponent(`${movieObject.Title} ${movieObject.Year || ''} trailer`);
+    const query = `${movieObject.Title} ${movieObject.Year || ''} trailer`.trim();
+    const encodedQuery = encodeURIComponent(query);
     const player = card.querySelector('.video-player');
     const overlay = card.querySelector('.card-overlay');
 
@@ -148,26 +149,58 @@ function toggleCardVideo(movieObject, card) {
     overlay.style.display = 'none';
     player.style.display = 'block';
     player.innerHTML = `
-        <div class="video-frame">
-            <button class="close-video" type="button" aria-label="Fechar trailer">&times;</button>
-            <iframe src="https://www.youtube.com/embed?listType=search&list=${query}&autoplay=1"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
+        <div class="video-frame video-loading">
+            <div class="video-loading-text">Carregando trailer...</div>
         </div>
     `;
 
-    const closeButton = player.querySelector('.close-video');
-    if (closeButton) {
-        closeButton.addEventListener('click', function(event) {
-            event.stopPropagation();
-            player.innerHTML = '';
-            player.style.display = 'none';
-            overlay.style.display = 'flex';
+    const endpoint = `https://api.allorigins.win/raw?url=https://www.youtube.com/results?search_query=${encodedQuery}`;
+
+    fetch(endpoint)
+        .then(response => response.text())
+        .then(html => {
+            const match = html.match(/\/watch\?v=([\w-]{11})/);
+            if (!match) {
+                throw new Error('Trailer não encontrado');
+            }
+
+            const videoId = match[1];
+            player.innerHTML = `
+                <div class="video-frame">
+                    <button class="close-video" type="button" aria-label="Fechar trailer">&times;</button>
+                    <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            `;
+
+            const closeButton = player.querySelector('.close-video');
+            if (closeButton) {
+                closeButton.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    player.innerHTML = '';
+                    player.style.display = 'none';
+                    overlay.style.display = 'flex';
+                });
+            }
+        })
+        .catch(() => {
+            player.innerHTML = `
+                <div class="video-frame video-error">
+                    <p>Não foi possível carregar o trailer aqui.</p>
+                    <button class="open-search" type="button">Abrir no YouTube</button>
+                </div>
+            `;
+
+            const openButton = player.querySelector('.open-search');
+            if (openButton) {
+                openButton.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    const url = `https://www.youtube.com/results?search_query=${encodedQuery}`;
+                    window.open(url, '_blank');
+                });
+            }
         });
-    }
 }
 
-// Função para buscar trailer
 function showTrailerModal(title, year) {
     const query = encodeURIComponent(`${title} ${year || ''} trailer`);
     const url = `https://www.youtube.com/results?search_query=${query}`;
