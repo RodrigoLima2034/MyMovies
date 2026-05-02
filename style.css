@@ -121,6 +121,7 @@ main {
     flex-direction: column;
     align-items: center;
     transition: transform 0.2s;
+    cursor: pointer;
 }
 
 #movie-list article:hover {
@@ -142,36 +143,6 @@ main {
 
 #movie-list button {
     margin-top: auto;
-}
-
-/* BOTÕES DO CARD */
-.card-buttons {
-    display: flex;
-    gap: 5px;
-    width: 100%;
-    margin-top: 10px;
-}
-
-.trailer-btn, .remove-btn {
-    padding: 6px 8px;
-    font-size: 11px;
-    flex: 1;
-}
-
-.trailer-btn {
-    background-color: #28a745;
-}
-
-.trailer-btn:hover {
-    background-color: #218838;
-}
-
-.remove-btn {
-    background-color: #dc3545;
-}
-
-.remove-btn:hover {
-    background-color: #c82333;
 }
 
 /* MODAL RESPONSIVO */
